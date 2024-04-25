@@ -185,9 +185,8 @@ public TelePlayer(client, int locationNum)
 		if (locationNum != g_Int_currentLoc[client])
 		{
 			g_Int_currentLoc[client] = locationNum;
+			PrintToChat(client, "%sLoaded location #%d.", g_chatTag, locationNum);
 		}
-
-		PrintToChat(client, "%sLoaded location #%d.", g_chatTag, locationNum);
 
 		// debug
 		// PrintToConsole(client, "tele vel: %f, %f, %f", vel[0],vel[1],vel[2]);
