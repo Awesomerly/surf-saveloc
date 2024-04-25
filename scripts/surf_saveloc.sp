@@ -165,4 +165,5 @@ resetData()
 	ClearArray(g_Array_posData);
 	ClearArray(g_Array_angData);
 	ClearArray(g_Array_velData);
+	locCount = 0;
 }
