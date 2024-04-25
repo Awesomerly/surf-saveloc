@@ -127,12 +127,24 @@ public Action Command_Teleport(client, args)
 }
 
 public Action Command_Previous(client, args) {
-	TelePlayer(client, g_Int_currentLoc[client] - 1);
+	int loc = g_Int_currentLoc[client] - 1;
+
+	if (loc <= 0) {
+		loc = locCount;
+	}
+
+	TelePlayer(client, loc);
 	return Plugin_Handled;
 }
 
 public Action Command_Next(client, args) {
-	TelePlayer(client, g_Int_currentLoc[client] + 1);
+	int loc = g_Int_currentLoc[client] + 1;
+
+	if (loc > locCount) {
+		loc = 1;
+	}
+
+	TelePlayer(client, loc);
 	return Plugin_Handled;
 }
 
