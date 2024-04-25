@@ -121,6 +121,13 @@ public Action Command_Teleport(client, args)
 		return Plugin_Handled;
 	}
 
+	// TODO: figure out if there's a better way to do this
+	// when initiating a teleport, save their loc number
+	if (locationNum != g_Int_currentLoc[client])
+	{
+		g_Int_currentLoc[client] = locationNum;
+	}
+
 	// check if player is alive
 	if (client > 0 && IsPlayerAlive(client))
 	{
