@@ -68,18 +68,18 @@ public Action Command_SaveLoc(client, args)
 	// check if player is alive
 	if (client > 0 && IsPlayerAlive(client))
 	{
+		if (maxLocs != -1 && locCount >= maxLocs)
+		{
+			PrintToChat(client, "%sMaximum number of savelocs reached (%i)!", g_chatTag, maxLocs);
+			return Plugin_Handled;
+		}
+
 		float origin[3];
 		GetClientAbsOrigin(client, origin);	   // save position
 		float angles[3];
 		GetClientEyeAngles(client, angles);	   // save angles
 		float velocity[3];
 		GetClientVelocity(client, velocity);	// save velocity - internal
-
-		if (maxLocs != -1 && locCount >= maxLocs)
-		{
-			PrintToChat(client, "%sMaximum number of savelocs reached (%i)!", g_chatTag, maxLocs);
-			return Plugin_Handled;
-		}
 
 		g_Array_posData.PushArray(origin);
 		g_Array_angData.PushArray(angles);
