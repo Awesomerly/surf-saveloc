@@ -77,7 +77,7 @@ public Action Command_SaveLoc(client, args)
 
 		if (maxLocs != -1 && locCount >= maxLocs)
 		{
-			PrintToChat(client, "%sMaximum number of savelocs reached (%d)!", g_chatTag, g_Convar_MaxLocs);
+			PrintToChat(client, "%sMaximum number of savelocs reached (%i)!", g_chatTag, maxLocs);
 			return Plugin_Handled;
 		}
 
