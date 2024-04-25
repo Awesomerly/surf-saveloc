@@ -24,7 +24,8 @@ char	  g_chatTag[128];
 int		  locCount = 0;
 
 // plugin info
-public Plugin myinfo = {
+public Plugin myinfo =
+{
 	name		= "surf-Saveloc",
 	author		= "Nyaaaa~ [U:1:74817093]",
 	description = "Surf/Bhop saveloc plugin.",
@@ -39,7 +40,7 @@ public OnPluginStart()
 	RegConsoleCmd("sm_teleport", Command_Teleport);
 
 	g_Convar_MaxLocs = CreateConVar("saveloc_maxlocations", DEFAULT_MAX_LOCS, "Maximum number of save locations. Set to -1 to disable limit and 0 to disable saveloc entirely.", FCVAR_NONE, true, -1.0, false);
-	g_Convar_ChatTag = CreateConVar("saveloc_chattag", DEFAULT_CHAT_TAG, "Tag to use before all output in chat. If using a tag, leave a blank space at the end.", FCVAR_NONE)
+	g_Convar_ChatTag = CreateConVar("saveloc_chattag", DEFAULT_CHAT_TAG, "Tag to use before all output in chat. If using a tag, leave a blank space at the end.", FCVAR_NONE);
 
 		// create config files in cfg/sourcemod/
 	AutoExecConfig(true, "saveloc_config");
