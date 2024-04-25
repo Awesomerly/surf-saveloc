@@ -63,6 +63,7 @@ public Action Command_SaveLoc(client, args)
 	if (maxLocs == 0.0)
 	{
 		PrintToChat(client, "%sSaveloc is currently disabled!", g_chatTag);
+		return Plugin_Handled;
 	}
 	// check if player is alive
 	if (client > 0 && IsPlayerAlive(client))
