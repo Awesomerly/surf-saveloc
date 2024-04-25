@@ -20,6 +20,8 @@ ArrayList g_Array_posData;
 ArrayList g_Array_angData;
 ArrayList g_Array_velData;
 
+int		  g_Int_currentLoc[MAXPLAYERS + 1] = { 0, ... };
+
 char	  g_chatTag[128];
 int		  locCount = 0;
 
@@ -42,7 +44,7 @@ public OnPluginStart()
 	g_Convar_MaxLocs = CreateConVar("saveloc_maxlocations", DEFAULT_MAX_LOCS, "Maximum number of save locations. Set to -1 to disable limit and 0 to disable saveloc entirely.", FCVAR_NONE, true, -1.0, false);
 	g_Convar_ChatTag = CreateConVar("saveloc_chattag", DEFAULT_CHAT_TAG, "Tag to use before all output in chat. If using a tag, leave a blank space at the end.", FCVAR_NONE);
 
-		// create config files in cfg/sourcemod/
+	// create config files in cfg/sourcemod/
 	AutoExecConfig(true, "saveloc_config");
 
 	// Each array will store arrays of size 3
@@ -51,11 +53,6 @@ public OnPluginStart()
 	g_Array_velData = new ArrayList(3);
 
 	g_Convar_ChatTag.GetString(g_chatTag, 128);
-}
-
-public OnMapEnd()
-{
-	resetData();
 }
 
 // command callbacks
@@ -88,6 +85,8 @@ public Action Command_SaveLoc(client, args)
 		g_Array_velData.PushArray(velocity);
 
 		locCount++;
+
+		g_Int_currentLoc[client] = locCount;
 		// debug
 		// PrintToConsole(client, "save vel: %f, %f, %f",
 		// velData[client][0],velData[client][1],velData[client][2]);
@@ -103,14 +102,18 @@ public Action Command_SaveLoc(client, args)
 
 public Action Command_Teleport(client, args)
 {
-	if (args < 1)
+	int locationNum = 0;
+
+	if (args == 0)
 	{
-		PrintToChat(client, "%sUsage: sm_tele #<loc num>", g_chatTag);
-		return Plugin_Handled;
+		locationNum = g_Int_currentLoc[client];
 	}
-	char arg[5];
-	GetCmdArg(1, arg, sizeof(arg));
-	int locationNum = StringToInt(arg);
+	else
+	{
+		char arg[5];
+		GetCmdArg(1, arg, sizeof(arg));
+		locationNum = StringToInt(arg);
+	}
 
 	if (!locationNum || locationNum > locCount)
 	{
@@ -160,6 +163,27 @@ GetClientVelocity(client, float vel[3])
 	vel[0] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[0]");
 	vel[1] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[1]");
 	vel[2] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[2]");
+}
+
+// Forwards
+public OnMapEnd()
+{
+	resetData();
+}
+
+public OnClientPutInServer(int client)
+{
+	clearClientLoc(client);
+}
+
+public OnClientDisconnect(int client)
+{
+	clearClientLoc(client);
+}
+
+clearClientLoc(int client)
+{
+	g_Int_currentLoc[client] = 0;
 }
 
 resetData()
