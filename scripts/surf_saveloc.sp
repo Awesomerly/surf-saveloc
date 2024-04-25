@@ -115,52 +115,8 @@ public Action Command_Teleport(client, args)
 		locationNum = StringToInt(arg);
 	}
 
-	if (locationNum <= 0 || locationNum > locCount)
-	{
-		PrintToChat(client, "%sLocation not found.", g_chatTag);
-		return Plugin_Handled;
-	}
+	TelePlayer(client, locationNum);
 
-	// TODO: figure out if there's a better way to do this
-	// when initiating a teleport, save their loc number
-	if (locationNum != g_Int_currentLoc[client])
-	{
-		g_Int_currentLoc[client] = locationNum;
-	}
-
-	// check if player is alive
-	if (client > 0 && IsPlayerAlive(client))
-	{
-		// check if any location was saved
-		float pos[3];
-		float ang[3];
-		float vel[3];
-
-		// Get From array at number provided-1 as array starts at 0
-		GetArrayArray(g_Array_posData, locationNum - 1, pos);
-		GetArrayArray(g_Array_angData, locationNum - 1, ang);
-		GetArrayArray(g_Array_velData, locationNum - 1, vel);
-
-		if ((GetVectorDistance(pos, NULL_VECTOR) > 0.00) && (GetVectorDistance(ang, NULL_VECTOR) > 0.00))
-		{
-			float newVel[3];
-			TeleportEntity(client, pos, ang, vel);
-			GetClientVelocity(client, newVel);
-
-			PrintToChat(client, "%sLoaded location #%d.", g_chatTag, locationNum);
-
-			// debug
-			// PrintToConsole(client, "tele vel: %f, %f, %f", vel[0],vel[1],vel[2]);
-		}
-		else	// print error and exit
-		{
-			PrintToChat(client, "%sNo Saveloc found.", g_chatTag);
-		}
-	}
-	else	// print error and exit
-	{
-		PrintToChat(client, "%sMust be alive to Saveloc!", g_chatTag);
-	}
 	return Plugin_Handled;
 }
 
@@ -170,6 +126,57 @@ GetClientVelocity(client, float vel[3])
 	vel[0] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[0]");
 	vel[1] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[1]");
 	vel[2] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[2]");
+}
+
+public TelePlayer(client, int locationNum)
+{
+	if (client < 0) {
+		return;
+	}
+	
+	if (!IsPlayerAlive(client))
+	{
+		PrintToChat(client, "%sMust be alive to Saveloc!", g_chatTag);
+		return;
+	}
+
+	if (locationNum <= 0 || locationNum > locCount)
+	{
+		PrintToChat(client, "%sLocation not found.", g_chatTag);
+		return;
+	}
+
+	float pos[3];
+	float ang[3];
+	float vel[3];
+
+	// Get From array at number provided-1 as array starts at 0
+	GetArrayArray(g_Array_posData, locationNum - 1, pos);
+	GetArrayArray(g_Array_angData, locationNum - 1, ang);
+	GetArrayArray(g_Array_velData, locationNum - 1, vel);
+
+	if ((GetVectorDistance(pos, NULL_VECTOR) > 0.00) && (GetVectorDistance(ang, NULL_VECTOR) > 0.00))
+	{
+		float newVel[3];
+		TeleportEntity(client, pos, ang, vel);
+		GetClientVelocity(client, newVel);
+		
+		// TODO: figure out if there's a better way to do this
+		// when initiating a teleport, save their loc number
+		if (locationNum != g_Int_currentLoc[client])
+		{
+			g_Int_currentLoc[client] = locationNum;
+		}
+
+		PrintToChat(client, "%sLoaded location #%d.", g_chatTag, locationNum);
+
+		// debug
+		// PrintToConsole(client, "tele vel: %f, %f, %f", vel[0],vel[1],vel[2]);
+	}
+	else	// print error and exit
+	{
+		PrintToChat(client, "%sNo Saveloc found.", g_chatTag);
+	}
 }
 
 // Forwards
