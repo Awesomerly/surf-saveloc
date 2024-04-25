@@ -38,8 +38,14 @@ public Plugin myinfo =
 public OnPluginStart()
 {
 	RegConsoleCmd("sm_saveloc", Command_SaveLoc);
+
 	RegConsoleCmd("sm_tele", Command_Teleport);
 	RegConsoleCmd("sm_teleport", Command_Teleport);
+
+	RegConsoleCmd("sm_prev", Command_Previous);
+	RegConsoleCmd("sm_previous", Command_Previous);
+
+	RegConsoleCmd("sm_next", Command_Next);
 
 	g_Convar_MaxLocs = CreateConVar("saveloc_maxlocations", DEFAULT_MAX_LOCS, "Maximum number of save locations. Set to -1 to disable limit and 0 to disable saveloc entirely.", FCVAR_NONE, true, -1.0, false);
 	g_Convar_ChatTag = CreateConVar("saveloc_chattag", DEFAULT_CHAT_TAG, "Tag to use before all output in chat. If using a tag, leave a blank space at the end.", FCVAR_NONE);
@@ -120,12 +126,14 @@ public Action Command_Teleport(client, args)
 	return Plugin_Handled;
 }
 
-GetClientVelocity(client, float vel[3])
-{
-	// dig into the entity properties for the client
-	vel[0] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[0]");
-	vel[1] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[1]");
-	vel[2] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[2]");
+public Action Command_Previous(client, args) {
+	TelePlayer(client, g_Int_currentLoc[client] - 1);
+	return Plugin_Handled;
+}
+
+public Action Command_Next(client, args) {
+	TelePlayer(client, g_Int_currentLoc[client] + 1);
+	return Plugin_Handled;
 }
 
 public TelePlayer(client, int locationNum)
@@ -160,7 +168,7 @@ public TelePlayer(client, int locationNum)
 		float newVel[3];
 		TeleportEntity(client, pos, ang, vel);
 		GetClientVelocity(client, newVel);
-		
+
 		// TODO: figure out if there's a better way to do this
 		// when initiating a teleport, save their loc number
 		if (locationNum != g_Int_currentLoc[client])
@@ -195,10 +203,20 @@ public OnClientDisconnect(int client)
 	clearClientLoc(client);
 }
 
+// Utility
 clearClientLoc(int client)
 {
 	g_Int_currentLoc[client] = 0;
 }
+
+GetClientVelocity(client, float vel[3])
+{
+	// dig into the entity properties for the client
+	vel[0] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[0]");
+	vel[1] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[1]");
+	vel[2] = GetEntPropFloat(client, Prop_Send, "m_vecVelocity[2]");
+}
+
 
 resetData()
 {
