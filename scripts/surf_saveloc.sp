@@ -115,7 +115,7 @@ public Action Command_Teleport(client, args)
 		locationNum = StringToInt(arg);
 	}
 
-	if (!locationNum || locationNum > locCount)
+	if (locationNum <= 0 || locationNum > locCount)
 	{
 		PrintToChat(client, "%sLocation not found.", g_chatTag);
 		return Plugin_Handled;
