@@ -7,8 +7,8 @@ Based on horsefeathers' [tm-saveloc](https://ksfclan.com/forum/showthread.php?41
 sm_saveloc
 sm_tele
 sm_tele <location num>
-sm_prev
-sm_next
+sm_prev / sm_previous / sm_teleprev
+sm_next / sm_telenext
 ```
 
 ## ConVars - config file in `cfg/sourcemod/`

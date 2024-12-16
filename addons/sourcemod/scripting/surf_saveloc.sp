@@ -44,8 +44,10 @@ public OnPluginStart()
 
 	RegConsoleCmd("sm_prev", Command_Previous);
 	RegConsoleCmd("sm_previous", Command_Previous);
+	RegConsoleCmd("sm_teleprev", Command_Previous);
 
 	RegConsoleCmd("sm_next", Command_Next);
+	RegConsoleCmd("sm_telenext", Command_Next);
 
 	g_Convar_MaxLocs = CreateConVar("saveloc_maxlocations", DEFAULT_MAX_LOCS, "Maximum number of save locations. Set to -1 to disable limit and 0 to disable saveloc entirely.", FCVAR_NONE, true, -1.0, false);
 	g_Convar_ChatTag = CreateConVar("saveloc_chattag", DEFAULT_CHAT_TAG, "Tag to use before all output in chat. If using a tag, leave a blank space at the end.", FCVAR_NONE);
